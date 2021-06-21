@@ -26,15 +26,22 @@ namespace FileUploadAPI.Controllers
         }
 
 
-        [HttpPost("Multiple", Name = "Multiple")]
-        [RequestFormLimits(MultipartBodyLengthLimit = 100000, ValueCountLimit = 2)]
+         [HttpPost("Multiple", Name = "Multiple")]
+        [RequestFormLimits(MultipartBodyLengthLimit = 10000000, ValueCountLimit = 10)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadFile(IFormFileCollection fileCollection)
+        public async Task<IActionResult> UploadFile(IFormFileCollection files)
         {
+            if (files == null)
+            {
+
+                throw new ArgumentException("please upload the file using files key");
+
+            }
+
             FileUploader uploader = new FileUploader();
           
-            foreach (var file in fileCollection)
+            foreach (var file in files)
             {
                 await uploader.WriteFile(file);
             }
